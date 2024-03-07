@@ -1,33 +1,44 @@
+# Initial comments improved for clarity and guidance on setup and login credentials
 # Notes: 
-# 1. Use the following username and password to access the admin rights 
-# username: admin
-# password: password
-# 2. Ensure you open the whole folder for this task in VS Code otherwise the 
-# program will look in your root directory for the text files.
+# 1. Admin Access Credentials:
+#    - Username: admin
+#    - Password: password
+#    Use the above credentials for admin rights.
+# 2. VS Code Setup:
+#    - Ensure the entire project folder is opened in VS Code. This is crucial for the program to locate text files correctly, as it searches in the project directory.
 
-# Import required modules for handling dates and system operations
 import os
-from datetime import datetime, date 
+from datetime import datetime, date
 
-USERS_FILE_PATH = "user.txt"
-DATETIME_STRING_FORMAT = "%Y-%m-%d"
+USERS_FILE_PATH = "user.txt"  # Path to the users file
+DATETIME_STRING_FORMAT = "%Y-%m-%d"  # Standard date format used throughout the program
 
 def check_or_create_users_file():
-    """Ensure there's a file for the program; if not, it will be initiated with a default admin record."""
+    """
+    Checks if the user.txt file exists in the project directory.
+    If not, it creates the file and initializes it with a default admin account.
+    """
     if not os.path.exists(USERS_FILE_PATH):
         with open(USERS_FILE_PATH, "w") as default_file:
-            default_file.write("admin;password\n")
+            default_file.write("admin;password\n")  # Adds a default admin user
 
 def read_users_file():
-    """Fetch and return a data structure to reflect the USERNAME: PASSWORD pairing."""
+    """
+    Reads the user.txt file and converts the content into a dictionary.
+    The dictionary keys are usernames, and the values are passwords.
+    """
     with open(USERS_FILE_PATH, 'r') as file:
         users = file.read().strip().split("\n")
         return {user.split(';')[0]: user.split(';')[1] for user in users}
 
 def execute_login():
-    """Simplified admin/worksite terminal gate (for scenario and user behaviour replay)."""
+    """
+    Handles the login process.
+    Prompts for username and password, verifies them against the users file,
+    and grants access if credentials match.
+    """
     logged_in = False
-    user_dict = read_users_file()  # Aggregating the on-record default and other imports
+    user_dict = read_users_file()  # Load user credentials
 
     while not logged_in:
         print("LOGIN")
@@ -279,14 +290,17 @@ def display_statistics(current_user):
     print(f"Number of tasks: \t\t {num_tasks}")
     print("-----------------------------------")
 
-    
-# Main function to run the task manager application
 
 def main():
     """
-    Main function for running the task manager application.
+    Main entry point for the task management application.
+    Ensures user.txt exists or creates it, then proceeds to login.
+    After login, the user can choose to perform actions like adding tasks,
+    viewing tasks, registering a new user, generating reports, or exiting.
     """
-    
+    check_or_create_users_file()
+    user = execute_login()
+
     while True:
         # Display menu with available options to the user
         print("\nPlease choose one of the following options:")
